@@ -74,7 +74,7 @@ for ii=1:nfiles
 end
     currentLayer = 1;
     for Layer=1:numTotalLayers
-           input = images{1};
+           input = images{ii};
            currentLayerNeurons = numberNeurons(Layer);
            nextLayerNeurons = numberNeurons(Layer + 1);
            weight = arrayWeights{currentLayer};
@@ -86,7 +86,7 @@ end
            currentLayer = currentLayer+1;
     end
     output = input;
-    RMSE = sqrt(output-input)
+    RMSE = sqrt(mean())
 end
 
 

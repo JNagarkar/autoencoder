@@ -1,4 +1,4 @@
-function [ deltaWMain,deltaValuesList ] = BackPropogationLastLayer(currentTrainingSample, arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix,deltaValuesList,deltaWMain)
+function [ output_args ] = BackPropogationLastLayer(currentTrainingSample, arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix)
 %UNTITLED18 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,10 +11,9 @@ disp(ActivatedArray{currentTrainingSample}(1))
 disp(inputMatrix{currentTrainingSample}(1))
 %}
 %Summation of error weight for every pixel over a batch of 10
-
-
 deltaW = zeros(numberNeurons(currentLayer + 1),numberNeurons(currentLayer));
 
+%while currentTrainingSample <= size(inputMatrix,2)
     %{
     for nextLayerNeuron=1:numberNeurons(currentLayer+1)
         for currentLayerNeuron=1:numberNeurons(currentLayer)
@@ -45,19 +44,17 @@ deltaW = zeros(numberNeurons(currentLayer + 1),numberNeurons(currentLayer));
     
     %break
     
-activatedMatrixNextLayer = double(ActivatedArray{currentLayer + 1});
-%targetMatrix = double(inputMatrix(:, currentTrainingSample));
-deltaNextLayer = -(double(inputMatrix) - activatedMatrixNextLayer) .* (activatedMatrixNextLayer .* (1 - activatedMatrixNextLayer));
-deltaValuesList{currentLayer + 1} = deltaNextLayer;
-
-activatedMatrixCurLayer = double(ActivatedArray{currentLayer});
-partialDerivative = deltaNextLayer * transpose(activatedMatrixCurLayer);
-deltaW = deltaW + partialDerivative;
-deltaWMain = deltaW;
-%disp(deltaW);
-currentTrainingSample = currentTrainingSample + 1;
-
-%disp(deltaW);
+    activatedMatrixNextLayer = double(ActivatedArray{currentLayer + 1});
+    targetMatrix = double(inputMatrix(:, currentTrainingSample));
+    onesMatrix = 
+    deltaNextLayer = -(targetMatrix - activatedMatrixNextLayer) * activatedMatrixNextLayer * (1 - activatedMatrixNextLayer);
+    activatedMatrixCurLayer = double(ActivatedArray{currentLayer});
+    partialDerivative = deltaNextLayer * transpose(activatedMatrixCurLayer);
+    deltaW = deltaW + partialDerivative;
+    currentTrainingSample = currentTrainingSample + 1;
+    
+%end
+disp(deltaW);
 
 end
 
