@@ -1,6 +1,6 @@
 
 %imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\TrainImages\\*.pgm');      
-imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\TrainImages\\*.pgm');
+imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\train\\*.pgm');
 nfiles = length(imagefiles);    % Number of files found
 
 counter = 0;
@@ -10,9 +10,8 @@ initial1 = [];
 currentLayerNeurons = 1024;
 nextLayerNeurons = 512;
 
-currentLayer=0;
-numHiddenLayer = 1;
-numberNeurons =[1024,512,1024];
+numHiddenLayer = 2;
+numberNeurons =[1024,512,512,1024];
 
 
 %Matrix arrays
@@ -32,7 +31,7 @@ ActivatedArray = {};
 batchSize = 10;
 
 
-currentLayer = currentLayer+1;
+currentLayer = 1;
 %arrayWeights{currentLayer} =weight;
 
 numTotalLayers = numHiddenLayer + 1;
@@ -55,7 +54,7 @@ alphaValue = 0.01;
     
 
 
-for epoch=1:500
+for epoch=1:50
 
     
     % Need new delta weight, delta bias values for each epoch. 
@@ -74,7 +73,7 @@ for epoch=1:500
        currentfilename = [imagefiles(ii).folder '/' imagefiles(ii).name];
        currentimage = imread(currentfilename);
        B = reshape(currentimage,1024,1);
-       B = double(B) / double(255);
+       B = double(B) ./ double(255);
        initial1 = [initial1 B];
        images{ii} = B;
        counter  =counter +1;
@@ -93,9 +92,15 @@ for epoch=1:500
                %arrayWeights{currentLayer} =  weight;
                %arrayBias{currentLayer} = bias;
                
+               disp(strcat('CurrentLayer',int2str(currentLayer)));
+               disp(strcat('Layer',int2str(Layer)));
+               
+               
+               
                %disp(strcat('Layer',int2str(Layer)));
                %disp(strcat('currentLayer',int2str(currentLayer)));
                ZMatrix = createLayer(input,arrayWeights{currentLayer},arrayBias{currentLayer});
+               %ZArrray is input array for a layer
                ZArray{currentLayer+1}=ZMatrix;
                ActivatedMatrix = ActivationFunction(ZMatrix);           
                ActivatedArray{currentLayer+1}= ActivatedMatrix;
@@ -103,6 +108,7 @@ for epoch=1:500
                currentLayer = currentLayer+1;
            end
 
+           disp(strcat('CurrentLayer after it',int2str(currentLayer)));
            currentLayer = currentLayer -1;
 
            %disp('CL')
@@ -121,6 +127,8 @@ for epoch=1:500
            arraydeltaB{currentLayer} = arraydeltaB{currentLayer} + deltaBTempBatch;
            currentLayer = currentLayer - 1;
            
+           disp(strcat('CurrentLayer after last',int2str(currentLayer)));
+               
            
            while currentLayer > 0
                 %deltaWMain = zeros(numberNeurons(currentLayer+1), numberNeurons(currentLayer));
@@ -131,18 +139,18 @@ for epoch=1:500
                 arraydeltaB{currentLayer} = arraydeltaB{currentLayer} + deltaBTempBatch;
                 currentLayer = currentLayer - 1;
            end
-           
+
+           disp(strcat('CurrentLayer after hidden',int2str(currentLayer)));
+
            initial1=[];
            currentLayer = 1;
        end
-       
-       
     end
     
     for Layer=1:numTotalLayers
         %disp(strcat('counter',int2str(counter)));
-        arrayWeights{Layer} = arrayWeights{Layer} - alphaValue*(arraydeltaW{Layer})/counter;
-        arrayBias{Layer} = arrayBias{Layer} - alphaValue*(arraydeltaB{Layer})/counter;
+        arrayWeights{Layer} = arrayWeights{Layer} - alphaValue*(arraydeltaW{Layer})./counter;
+        arrayBias{Layer} = arrayBias{Layer} - alphaValue*(arraydeltaB{Layer})./counter;
     end
     disp(strcat('iteration',int2str(epoch)));
 end
