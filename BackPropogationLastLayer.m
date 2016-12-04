@@ -1,4 +1,4 @@
-function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropogationLastLayer(currentTrainingSample, batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix,deltaValuesList,deltaWMain,deltaBMain)
+function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropogationLastLayer(batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,deltaValuesList,deltaWMain,deltaBMain)
 %UNTITLED18 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -48,6 +48,7 @@ deltaB = zeros(numberNeurons(currentLayer + 1),batchSize);
     
 activatedMatrixNextLayer = double(ActivatedArray{currentLayer + 1});
 %targetMatrix = double(inputMatrix(:, currentTrainingSample));
+inputMatrix = double(ActivatedArray{1});
 deltaNextLayer = -(double(inputMatrix) - activatedMatrixNextLayer) .* (activatedMatrixNextLayer .* (1 - activatedMatrixNextLayer));
 deltaValuesList{currentLayer + 1} = deltaNextLayer;
 

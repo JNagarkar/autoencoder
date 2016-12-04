@@ -1,8 +1,8 @@
-function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropagationHiddenLayers(currentTrainingSample, batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix,deltaValuesList,deltaWMain,deltaBMain)
+function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropagationHiddenLayers( batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,deltaValuesList,deltaWMain,deltaBMain)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-deltaW = zeros(numberNeurons(currentLayer + 1),numberNeurons(currentLayer));
-deltaB = zeros(numberNeurons(currentLayer + 1),batchSize);
+deltaW = double(zeros(numberNeurons(currentLayer + 1),numberNeurons(currentLayer)));
+deltaB = double(zeros(numberNeurons(currentLayer + 1),batchSize));
   
 weightMatrixNextLayer = double(arrayWeights{currentLayer + 1});
 deltaNextNextLayer = deltaValuesList{currentLayer + 2};
