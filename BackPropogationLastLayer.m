@@ -1,4 +1,4 @@
-function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropogationLastLayer(batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,deltaValuesList,deltaWMain,deltaBMain)
+function [ deltaWTempBatch,deltaBTempBatch,deltaValuesList ] = BackPropogationLastLayer(batchSize,ActivatedArray,currentLayer,numberNeurons,deltaValuesList,deltaWTempBatch,deltaBTempBatch)
 %UNTITLED18 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -57,8 +57,8 @@ partialDerivativeW = deltaNextLayer * transpose(activatedMatrixCurLayer);
 deltaW = deltaW + partialDerivativeW;
 partialDerivativeB = deltaNextLayer;
 deltaB = deltaB + partialDerivativeB;
-deltaWMain = deltaW;
-deltaBMain = deltaB;
+deltaWTempBatch = deltaW;
+deltaBTempBatch = deltaB;
 %disp(deltaW);
 %currentTrainingSample = currentTrainingSample + 1;
 
