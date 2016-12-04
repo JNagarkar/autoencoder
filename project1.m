@@ -1,6 +1,6 @@
 
 %imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\TrainImages\\*.pgm');      
-imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\TrainImages\\*.pgm');
+imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\single\\*.pgm');
 nfiles = length(imagefiles);    % Number of files found
 
 counter = 0;
@@ -28,7 +28,8 @@ ActivatedArray = {};
 %weight=[]
 %weight = NormalizedWeight(currentLayerNeurons,nextLayerNeurons);
 
-batchSize = 10;
+batchSize = 1;
+alphaValue = 0.001;
 
 
 currentLayer = 1;
@@ -49,12 +50,11 @@ for Layer=1:numTotalLayers
 end
 
 currentLayer = 1;
-alphaValue = 0.1;
 
     
 
 
-for epoch=1:50
+for epoch=1:1000
 
     
     % Need new delta weight, delta bias values for each epoch. 
@@ -154,7 +154,7 @@ for epoch=1:50
         arrayWeights{Layer} = arrayWeights{Layer} - alphaValue*(arraydeltaW{Layer})./counter;
         arrayBias{Layer} = arrayBias{Layer} - alphaValue*(arraydeltaB{Layer})./counter;
     end
-    %disp(strcat('iteration',int2str(epoch)));
+    disp(strcat('iteration',int2str(epoch)));
 end
 
 currentLayer = 1;
@@ -181,5 +181,5 @@ output = input;
 RMSE = sqrt(sum((output-double(images{1})).^2));
 disp(RMSE);
 
-output = output*255;
+output = output;
 imshow(reshape(output,32,32));
