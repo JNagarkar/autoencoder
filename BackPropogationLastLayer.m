@@ -1,4 +1,4 @@
-function [ deltaWMain,deltaValuesList ] = BackPropogationLastLayer(currentTrainingSample, arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix,deltaValuesList,deltaWMain)
+function [ deltaWMain,deltaBMain,deltaValuesList ] = BackPropogationLastLayer(currentTrainingSample, batchSize,arrayWeights,ZArray,ActivatedArray,currentLayer,numberNeurons,inputMatrix,deltaValuesList,deltaWMain,deltaBMain)
 %UNTITLED18 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -14,6 +14,7 @@ disp(inputMatrix{currentTrainingSample}(1))
 
 
 deltaW = zeros(numberNeurons(currentLayer + 1),numberNeurons(currentLayer));
+deltaB = zeros(numberNeurons(currentLayer + 1),batchSize);
 
     %{
     for nextLayerNeuron=1:numberNeurons(currentLayer+1)
@@ -51,11 +52,14 @@ deltaNextLayer = -(double(inputMatrix) - activatedMatrixNextLayer) .* (activated
 deltaValuesList{currentLayer + 1} = deltaNextLayer;
 
 activatedMatrixCurLayer = double(ActivatedArray{currentLayer});
-partialDerivative = deltaNextLayer * transpose(activatedMatrixCurLayer);
-deltaW = deltaW + partialDerivative;
+partialDerivativeW = deltaNextLayer * transpose(activatedMatrixCurLayer);
+deltaW = deltaW + partialDerivativeW;
+partialDerivativeB = deltaNextLayer;
+deltaB = deltaB + partialDerivativeB;
 deltaWMain = deltaW;
+deltaBMain = deltaB;
 %disp(deltaW);
-currentTrainingSample = currentTrainingSample + 1;
+%currentTrainingSample = currentTrainingSample + 1;
 
 %disp(deltaW);
 

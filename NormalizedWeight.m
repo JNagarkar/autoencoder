@@ -4,9 +4,8 @@ function [weight] = NormalizedWeight(currentNeurons,NextNeurons)
 
 %weight = zeros(currentNeurons,NextNeurons);
 
-weight = zeros(NextNeurons,currentNeurons);
-
-
+weight = rand(NextNeurons,currentNeurons);
+weight = double(weight / 1000.0);
 %disp(weight);
 
 end
