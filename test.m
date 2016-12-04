@@ -1,4 +1,4 @@
-
+%{
 arrayWeights = {};
 arrayBias = {};
 arrayWeights{1} = W1;
@@ -21,3 +21,16 @@ ActivatedArray{Layer}= ActivatedMatrix;
 
 end
     imshow(reshape(ActivatedMatrix,32,32));
+%}
+
+outputDirectory = 'C:\Users\jayna\Desktop\FSLA\TrainImages\output';
+
+testImages = dir('C:\Users\jayna\Desktop\FSLA\TestImages\TestImages\*.pgm');
+numberTestFiles = length(testImages);
+
+
+
+
+outputDirectory = 'C:\Users\jayna\Desktop\FSLA\TrainImages\output\';
+currentimageTest = imread('C:\Users\jayna\Desktop\FSLA\TrainImages\train\Adrien_Brody_0003.pgm');
+imwrite(reshape(currentimageTest,[32,32]),strcat(outputDirectory,'abc.pgm'),'pgm');

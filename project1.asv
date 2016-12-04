@@ -1,7 +1,7 @@
 
 %imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\TrainImages\\*.pgm');      
-imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\train\\*.pgm');
-nfiles = length(imagefiles);    % Number of files found
+trainImages = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\train\\*.pgm');
+numberTrainFiles = length(trainImages);    % Number of files found
 
 counter = 0;
 %create 1024*10 matrix
@@ -10,8 +10,8 @@ initial1 = [];
 currentLayerNeurons = 1024;
 nextLayerNeurons = 512;
 
-numHiddenLayer = 2;
-numberNeurons =[1024,512,512,1024];
+numHiddenLayer = 1;
+numberNeurons =[1024,512,1024];
 
 
 %Matrix arrays
@@ -28,7 +28,8 @@ ActivatedArray = {};
 %weight=[]
 %weight = NormalizedWeight(currentLayerNeurons,nextLayerNeurons);
 
-batchSize = 1;
+batchSize = 10;
+alphaValue = 1;
 
 
 currentLayer = 1;
@@ -49,17 +50,19 @@ for Layer=1:numTotalLayers
 end
 
 currentLayer = 1;
-alphaValue = 0.01;
 
     
 
 
-for epoch=1:
+for epoch=1:1000
 
     
     % Need new delta weight, delta bias values for each epoch. 
     arraydeltaW = {};
     arraydeltaB = {};
+    
+    counter = 0;
+    
     for Layer=1:numTotalLayers
         deltaWTempBatch = zeros(numberNeurons(Layer+1), numberNeurons(Layer));
         deltaBTempBatch = zeros(numberNeurons(Layer+1), batchSize);
@@ -69,8 +72,8 @@ for epoch=1:
     
     
     % iterate over total number of images
-    for ii=1:nfiles
-       currentfilename = [imagefiles(ii).folder '/' imagefiles(ii).name];
+    for ii=1:numberTrainFiles
+       currentfilename = [trainImages(ii).folder '/' trainImages(ii).name];
        currentimage = imread(currentfilename);
        B = reshape(currentimage,1024,1);
        B = double(B) ./ double(255);
@@ -91,8 +94,8 @@ for epoch=1:
                %arrayWeights{currentLayer} =  weight;
                %arrayBias{currentLayer} = bias;
                
-               disp(strcat('CurrentLayer',int2str(currentLayer)));
-               disp(strcat('Layer',int2str(Layer)));
+               %disp(strcat('CurrentLayer',int2str(currentLayer)));
+               %disp(strcat('Layer',int2str(Layer)));
                
                
                
@@ -107,7 +110,7 @@ for epoch=1:
                currentLayer = currentLayer+1;
            end
 
-           disp(strcat('CurrentLayer after it',int2str(currentLayer)));
+           %disp(strcat('CurrentLayer after it',int2str(currentLayer)));
            currentLayer = currentLayer -1;
 
            %disp('CL')
@@ -126,7 +129,7 @@ for epoch=1:
            arraydeltaB{currentLayer} = arraydeltaB{currentLayer} + deltaBTempBatch;
            currentLayer = currentLayer - 1;
            
-           disp(strcat('CurrentLayer after last',int2str(currentLayer)));
+           %disp(strcat('CurrentLayer after last',int2str(currentLayer)));
                
            
            while currentLayer > 0
@@ -139,7 +142,7 @@ for epoch=1:
                 currentLayer = currentLayer - 1;
            end
 
-           disp(strcat('CurrentLayer after hidden',int2str(currentLayer)));
+           %disp(strcat('CurrentLayer after hidden',int2str(currentLayer)));
 
            initial1=[];
            currentLayer = 1;
@@ -153,6 +156,27 @@ for epoch=1:
     end
     disp(strcat('iteration',int2str(epoch)));
 end
+
+
+outputDirectory = 'C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\output';
+
+testImages = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TestImages\\TestImages\\*.pgm');
+
+
+
+for ii=1:numberTrainFiles
+       currentfilenameTest = [testImages(ii).folder '/' testImages(ii).name];
+       currentimageTest = imread(currentfilenameTest);
+       B = reshape(currentimageTest,1024,1);
+       B = double(B) ./ double(255);
+       initial1 = [initial1 B];
+       images{ii} = B;
+       counter  =counter +1;
+end
+
+
+
+
 
 currentLayer = 1;
 input = images{1};
@@ -178,5 +202,6 @@ output = input;
 RMSE = sqrt(sum((output-double(images{1})).^2));
 disp(RMSE);
 
-output = output*255;
+imwrite(mat2gray(reshape(oa3{f},[32,32])),strcat(outputimgDir,testoutimgname{f}),'pgm');
+
 imshow(reshape(output,32,32));

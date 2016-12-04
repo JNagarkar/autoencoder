@@ -1,7 +1,7 @@
-
-%imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\TrainImages\\*.pgm');      
-imagefiles = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\single\\*.pgm');
-nfiles = length(imagefiles);    % Number of files found
+disp(datestr(now));
+%imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\train\\*.pgm');      
+trainImages = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\TrainImages\\*.pgm');
+numberTrainFiles = length(trainImages);    % Number of files found
 
 counter = 0;
 %create 1024*10 matrix
@@ -10,8 +10,9 @@ initial1 = [];
 currentLayerNeurons = 1024;
 nextLayerNeurons = 512;
 
-numHiddenLayer = 1;
-numberNeurons =[1024,512,1024];
+numHiddenLayer = 2;
+numberNeurons =[1024,512,512,1024];
+batchSize = 10;
 
 
 %Matrix arrays
@@ -28,8 +29,7 @@ ActivatedArray = {};
 %weight=[]
 %weight = NormalizedWeight(currentLayerNeurons,nextLayerNeurons);
 
-batchSize = 1;
-alphaValue = 0.001;
+alphaValue = 0.00001; ;
 
 
 currentLayer = 1;
@@ -72,8 +72,8 @@ for epoch=1:1000
     
     
     % iterate over total number of images
-    for ii=1:nfiles
-       currentfilename = [imagefiles(ii).folder '/' imagefiles(ii).name];
+    for ii=1:numberTrainFiles
+       currentfilename = [trainImages(ii).folder '/' trainImages(ii).name];
        currentimage = imread(currentfilename);
        B = reshape(currentimage,1024,1);
        B = double(B) ./ double(255);
@@ -157,29 +157,6 @@ for epoch=1:1000
     disp(strcat('iteration',int2str(epoch)));
 end
 
-currentLayer = 1;
-input = images{1};
-numTotalLayers = numHiddenLayer + 1;
-for Layer=1:numTotalLayers
-       currentLayerNeurons = numberNeurons(Layer);
-       nextLayerNeurons = numberNeurons(Layer + 1);
-       weight = arrayWeights{currentLayer};
-       bias = arrayBias{currentLayer}(:,1);
-       
-       disp(size(weight));
-       disp(size(input));
-       disp(size(bias));
-       
-       ZMatrix = createLayer(input,weight,bias);
-       ZArray{currentLayer+1}=ZMatrix;
-       ActivatedMatrix = ActivationFunction(ZMatrix);           
-       ActivatedArray{currentLayer+1}= ActivatedMatrix;
-       input = ActivatedMatrix;
-       currentLayer = currentLayer+1;
-end
-output = input;
-RMSE = sqrt(sum((output-double(images{1})).^2));
-disp(RMSE);
+displayOutput(arrayWeights,arrayBias,numTotalLayers);
 
-output = output;
-imshow(reshape(output,32,32));
+
