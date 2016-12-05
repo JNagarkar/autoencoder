@@ -1,8 +1,8 @@
 disp(datestr(now));
-%imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\train\\*.pgm');      
+%imagefiles = dir('E:\\ASU\\Fall 2016\\FSL\\Project\\TrainImages\\*.pgm');      
 trainImages = dir('C:\\Users\\jayna\\Desktop\\FSLA\\TrainImages\\TrainImages\\*.pgm');
 numberTrainFiles = length(trainImages);    % Number of files found
-
+numberTrainFiles = 100;
 counter = 0;
 %create 1024*10 matrix
 initial1 = [];
@@ -10,8 +10,8 @@ initial1 = [];
 currentLayerNeurons = 1024;
 nextLayerNeurons = 512;
 
-numHiddenLayer = 2;
-numberNeurons =[1024,512,512,1024];
+numHiddenLayer = 1;
+numberNeurons =[1024,512,1024];
 batchSize = 10;
 
 
@@ -29,7 +29,8 @@ ActivatedArray = {};
 %weight=[]
 %weight = NormalizedWeight(currentLayerNeurons,nextLayerNeurons);
 
-alphaValue = 0.00001; ;
+alphaValue = 0.001;
+lambda = 0.001;
 
 
 currentLayer = 1;
@@ -50,9 +51,6 @@ for Layer=1:numTotalLayers
 end
 
 currentLayer = 1;
-
-    
-
 
 for epoch=1:1000
 
@@ -141,6 +139,12 @@ for epoch=1:1000
                 arraydeltaB{currentLayer} = arraydeltaB{currentLayer} + deltaBTempBatch;
                 currentLayer = currentLayer - 1;
            end
+           
+           for Layer=1:numTotalLayers
+                %disp(strcat('counter',int2str(counter)));
+                arrayWeights{Layer} = arrayWeights{Layer} - alphaValue*((arraydeltaW{Layer})./batchSize + (lambda * arrayWeights{Layer}));
+                arrayBias{Layer} = arrayBias{Layer} - alphaValue*(arraydeltaB{Layer})./batchSize;
+           end
 
            %disp(strcat('CurrentLayer after hidden',int2str(currentLayer)));
 
@@ -148,15 +152,13 @@ for epoch=1:1000
            currentLayer = 1;
        end
     end
-    
+    %{
     for Layer=1:numTotalLayers
         %disp(strcat('counter',int2str(counter)));
         arrayWeights{Layer} = arrayWeights{Layer} - alphaValue*(arraydeltaW{Layer})./counter;
         arrayBias{Layer} = arrayBias{Layer} - alphaValue*(arraydeltaB{Layer})./counter;
     end
+    %}
     disp(strcat('iteration',int2str(epoch)));
 end
-
 displayOutput(arrayWeights,arrayBias,numTotalLayers);
-
-

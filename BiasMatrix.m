@@ -3,7 +3,7 @@ function [ bias ] = BiasMatrix(currentNeurons,NextNeurons,batchSize)
 %   Detailed explanation goes here
 
 bias = rand(NextNeurons,batchSize);
-bias = double(bias / 10000.0);
+bias = double(bias / 100.0);
 
 end
 

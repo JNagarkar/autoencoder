@@ -11,36 +11,46 @@ numberTestFiles = length(testImages);
 counterTest = 0;
 currentLayer  = 1;
 initialtest = [];
+
+MSE = 0;
+
 for ii=1:numberTestFiles
        currentfilenameTest = [testImages(ii).folder '/' testImages(ii).name];
        currentimageTest = imread(currentfilenameTest);
        
        currentImageName = testImages(ii).name;
        
-       B = reshape(currentimageTest,1024,1);
-       B = double(B) ./ double(255);
-       initialtest = [initialtest B];
-       imagesTest{ii} = B;
+       BTest = reshape(currentimageTest,1024,1);
+       BTest = double(BTest) ./ double(255);
+       initialtest = [initialtest BTest];
+       imagesTest{ii} = BTest;
        counterTest  =counterTest +1;
-       input = imagesTest{ii};
+       inputTest = imagesTest{ii};
        for Layer=1:numTotalLayers
-           weight = arrayWeights{Layer};
-           bias = arrayBias{Layer}(:,1);
+           weightTest = arrayWeights{Layer};
+           biasTest = arrayBias{Layer}(:,1);
 
 
-           ZMatrix = createLayer(input,weight,bias);
-           ActivatedMatrix = ActivationFunction(ZMatrix);           
-           input = ActivatedMatrix;           
+           ZMatrixTest = createLayer(inputTest,weightTest,biasTest);
+           ActivatedMatrixTest = ActivationFunction(ZMatrixTest);           
+           inputTest = ActivatedMatrixTest;           
        end
-       output = input;
+       outputTest = inputTest;
        
-       imwrite(mat2gray(reshape(output,[32,32])),strcat(outputDirectory,currentImageName),'pgm');
+       imwrite(reshape(outputTest,[32,32]),strcat(outputDirectory,currentImageName),'pgm');
        
     %RMSE = sqrt(sum((output-double(images{1})).^2));
     %disp(RMSE);
+
+    %outputTest - double(inputTest)
+    MSE = MSE + immse(outputTest, double(imagesTest{ii}));                            
+    
 end
 
 
-end
-
+MSE = MSE ./ double(numberTestFiles);
+RMSE = sqrt(MSE);
+disp(RMSE);
 disp(datestr(now));
+end
+
