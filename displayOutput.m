@@ -50,6 +50,8 @@ end
 
 MSE = MSE ./ double(numberTestFiles);
 RMSE = sqrt(MSE);
+
+disp(strcat('RMSE Over all Test Images'));
 disp(RMSE);
 disp(datestr(now));
 end
